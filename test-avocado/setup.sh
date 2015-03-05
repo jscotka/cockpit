@@ -32,7 +32,7 @@ rm -f $ENV_VARIABLES
 if [ -z "$GUESTOS" ]; then
     GUESTOS=fedora-21
 fi
-echolo ">>> $GUESTOS testing <<<"
+echolog ">>> $GUESTOS testing <<<"
 
 if check_host $LUSER; then
     echolog "Host already configured"
