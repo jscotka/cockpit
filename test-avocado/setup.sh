@@ -84,10 +84,11 @@ vm_delete_snaps $GUEST1
 # copy test to proper location (it is workaround for avocado)
 AVOCADO_TEST_DIR=/tmp/avocado-test
 mkdir -p $AVOCADO_TEST_DIR
-/bin/cp -Lr $COCKPIT_DIR/$BASE/* $AVOCADO_TEST_DIR
-vm_ssh $GUEST1 mkdir -p /root/avocado/tests/$AVOCADO_TEST_DIR /root/cockpit
-( cd $COCKPIT_DIR; tar cf - . | vm_ssh $GUEST1 tar xf - --directory /root/cockpit; )
-vm_ssh $GUEST1 cp -Lr /root/cockpit/$BASE/\* /root/avocado/tests$AVOCADO_TEST_DIR
+
+# Install cockpit sources to $GUEST1
+#
+( cd $(git rev-parse --show-toplevel) && git archive HEAD --prefix cockpit/ ) \
+  | vm_ssh $GUEST1 "rm -rf /root/cockpit && tar xf - --directory /root/"
 
 AVOCADO_PARAMS="--vm-domain $GUEST1 --vm-username root --vm-password $PASSWD --vm-hostname $IP"
 avocado run $AVOCADO_PARAMS --xunit out1.xml $AVOCADO_TEST_DIR/{inittest.sh,compiletest.sh}
