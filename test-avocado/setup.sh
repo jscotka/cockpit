@@ -84,7 +84,7 @@ vm_delete_snaps $GUEST1
 # Install cockpit sources to $GUEST1
 #
 ( cd $(git rev-parse --show-toplevel) && git archive HEAD --prefix cockpit/ ) \
-  | vm_ssh $GUEST1 "rm -rf /root/cockpit && tar xf - --directory /root/"
+  | vm_ssh $GUEST1 "rm -rf /root/cockpit && tar xfm - --directory /root/"
 
 AVOCADO_TEST_DIR=$SCRIPT_DIR
 AVOCADO_PARAMS="--vm-domain $GUEST1 --vm-username root --vm-password $PASSWD --vm-hostname $IP"
