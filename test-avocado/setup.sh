@@ -86,8 +86,22 @@ vm_delete_snaps $GUEST1
 ( cd $(git rev-parse --show-toplevel) && git archive HEAD --prefix cockpit/ ) \
   | vm_ssh $GUEST1 "rm -rf /root/cockpit && tar xfm - --directory /root/"
 
-AVOCADO_TEST_DIR=$SCRIPT_DIR
 AVOCADO_PARAMS="--vm-domain $GUEST1 --vm-username root --vm-password $PASSWD --vm-hostname $IP"
-avocado run $AVOCADO_PARAMS --xunit out1.xml $AVOCADO_TEST_DIR/{inittest.sh,compiletest.sh}
-avocado run $AVOCADO_PARAMS --xunit out2.xml --vm-clean $AVOCADO_TEST_DIR/checklogin.py
-avocado run $AVOCADO_PARAMS --xunit out3.xml --vm-clean $AVOCADO_TEST_DIR/checkrealms.py
+
+function run() {
+    if ! avocado run $AVOCADO_PARAMS "$@"; then
+        FAILED=FAILED
+    fi
+}
+
+AVOCADO_TEST_DIR=$SCRIPT_DIR
+
+FAILED=
+run --xunit out1.xml $AVOCADO_TEST_DIR/{inittest.sh,compiletest.sh}
+run --xunit out2.xml --vm-clean $AVOCADO_TEST_DIR/checklogin.py
+run --xunit out3.xml --vm-clean $AVOCADO_TEST_DIR/checkrealms.py
+
+if [ -n $FAILED ]; then
+    echo $FAILED
+    exit 1
+fi
