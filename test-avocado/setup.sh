@@ -81,15 +81,12 @@ fi
 # workaound for slow snapshost creation (delete all existing snaps)
 vm_delete_snaps $GUEST1
 
-# copy test to proper location (it is workaround for avocado)
-AVOCADO_TEST_DIR=/tmp/avocado-test
-mkdir -p $AVOCADO_TEST_DIR
-
 # Install cockpit sources to $GUEST1
 #
 ( cd $(git rev-parse --show-toplevel) && git archive HEAD --prefix cockpit/ ) \
   | vm_ssh $GUEST1 "rm -rf /root/cockpit && tar xf - --directory /root/"
 
+AVOCADO_TEST_DIR=$SCRIPT_DIR
 AVOCADO_PARAMS="--vm-domain $GUEST1 --vm-username root --vm-password $PASSWD --vm-hostname $IP"
 avocado run $AVOCADO_PARAMS --xunit out1.xml $AVOCADO_TEST_DIR/{inittest.sh,compiletest.sh}
 avocado run $AVOCADO_PARAMS --xunit out2.xml --vm-clean $AVOCADO_TEST_DIR/checklogin.py
