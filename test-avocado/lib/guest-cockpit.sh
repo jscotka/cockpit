@@ -7,7 +7,7 @@ else
     npm -g install phantomjs
 fi
 
-BASE_PCKGS="avocado"
+BASE_PCKGS="avocado avocado-plugins-output-html"
 
 if rpm -q $BASE_PCKGS >& /dev/null; then
     echolog "All packages alread installed"

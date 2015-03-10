@@ -30,7 +30,7 @@ source $CTM_SCRCTM_IPTPATH/lib/host_setup.sh
 CTM_POOLNAME=$HS_POOLNAME
 
 CTM_PREQ="
-yum -y -q install tar bzip2 gzip unzip zip tar git yum-utils fontconfig pystache;
+yum -y -q install tar bzip2 gzip unzip zip tar git yum-utils fontconfig pystache ntpdate;
 echo $CTM_PASSWORD | passwd --stdin $RCTM_USER
 "
 

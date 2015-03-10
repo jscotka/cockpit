@@ -45,7 +45,7 @@ class checkrealms(test.Test):
         self.log.debug("%s/var.env" % libdir)
         process.run("/bin/cp /etc/pam.d/cockpit{,.old}", shell=True, ignore_status=True)
         process.run("/bin/cp /etc/resolv.conf{,.old}", shell=True, ignore_status=True)
-
+        process.run("ntpdate %s" % domainip, shell=True)
         process.run("echo -e 'domain %s\nsearch %s\nnameserver %s\n' > /etc/resolv.conf" % (domain, domain, domainip), shell=True, ignore_status=True)
         wait(lambda: process.run("nslookup -type=SRV _ldap._tcp.%s" % domain))
         # create user admin
