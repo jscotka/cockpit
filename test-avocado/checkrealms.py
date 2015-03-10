@@ -43,33 +43,33 @@ except:
 class checkrealms(test.Test):
     def setup(self):
         self.log.debug("%s/var.env" % libdir)
-        process.run("/bin/cp /etc/pam.d/cockpit{,.old}", shell=True, ignore_status=True)
-        process.run("/bin/cp /etc/resolv.conf{,.old}", shell=True, ignore_status=True)
-        process.run("ntpdate %s" % domainip, shell=True)
-        process.run("echo -e 'domain %s\nsearch %s\nnameserver %s\n' > /etc/resolv.conf" % (domain, domain, domainip), shell=True, ignore_status=True)
+        process.run("/bin/cp /etc/pam.d/cockpit{,.old}", shell = True)
+        process.run("/bin/cp /etc/resolv.conf{,.old}", shell = True)
+        process.run("ntpdate %s" % domainip, shell = True)
+        process.run("echo -e 'domain %s\nsearch %s\nnameserver %s\n' > /etc/resolv.conf" % (domain, domain, domainip), shell = True)
         wait(lambda: process.run("nslookup -type=SRV _ldap._tcp.%s" % domain))
         # create user admin
-        process.run("useradd %s -c 'Administrator'" % "admin", shell=True, ignore_status=True)
-        process.run("gpasswd wheel -a %s" % "admin", shell=True, ignore_status=True)
-        process.run("echo foobar | passwd --stdin %s" % "admin", shell=True)
-        process.run("echo '%s' > /etc/pam.d/cockpit" % admins_only_pam, shell=True)
+        process.run("useradd %s -c 'Administrator'" % "admin", shell = True, ignore_status = True)
+        process.run("gpasswd wheel -a %s" % "admin", shell = True)
+        process.run("echo foobar | passwd --stdin %s" % "admin", shell = True)
+        process.run("echo '%s' > /etc/pam.d/cockpit" % admins_only_pam, shell = True)
 
-        process.run("systemctl start cockpit", shell=True ,ignore_status=True)
+        process.run("systemctl restart cockpit", shell = True)
 
     def action(self):
         self.testIpa()
 
     def cleanup(self):
-        process.run("systemctl stop cockpit", shell=True)
-        process.run("/bin/cp -f /etc/pam.d/cockpit{.old,}", shell=True, ignore_status=True)
-        process.run("/bin/cp -f /etc/resolv.conf{.old,}", shell=True, ignore_status=True)
+        process.run("systemctl stop cockpit", shell = True)
+        process.run("/bin/cp -f /etc/pam.d/cockpit{.old,}", shell = True)
+        process.run("/bin/cp -f /etc/resolv.conf{.old,}", shell = True)
         self.log.debug("END")
 
     def testIpa(self):
 
         default_user = "admin"
-        b=Browser("localhost", "x")
-        b.login_and_go("server", user=default_user, href="/system/host")
+        b = Browser("localhost", "x")
+        b.login_and_go("server", user = default_user, href = "/system/host")
 
 
         def wait_number_domains(n):

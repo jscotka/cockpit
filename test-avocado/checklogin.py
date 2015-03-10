@@ -39,7 +39,7 @@ from libjournal import *
 
 
 
-username="user"
+username = "user"
 
 class checklogin(test.Test):
     """
@@ -47,7 +47,7 @@ class checklogin(test.Test):
     """
 
     def Basic(self):
-        b=Browser("localhost", "x")
+        b = Browser("localhost", "x")
         b.open("system/host")
         b.wait_visible("#login")
 
@@ -109,26 +109,25 @@ class checklogin(test.Test):
         self.assertEqual(self.curl_auth_code ('/login', 'a' * 4000 + ':'), 401)
         self.assertEqual(self.curl_auth_code ('/login', 'a' * 4000 + ':b\nc'), 401)
         self.assertEqual(self.curl_auth_code ('/login', 'a' * 4000 + ':b\nc\n'), 401)
-        j=Journalctl()
+        j = Journalctl()
         j.allow_journal_messages ("Returning error-response ... with reason .*", "pam_unix\(cockpit:auth\): authentication failure; .*", "pam_unix\(cockpit:auth\): check pass; user unknown", "pam_succeed_if\(cockpit:auth\): requirement .* not met by user .*", "couldn't parse login input: Malformed input", "couldn't parse login input: Authentication failed")
         j.allow_restart_journal_messages
         j.check_journal_messages()
 
     def setup(self):
 # Setup users and passwords
-        process.run("useradd %s -c 'Barney Bär'" % username, shell=True, ignore_status=True)
-        process.run("echo abcdefg | passwd --stdin %s" % username, shell=True)
-
-        process.run("useradd %s -c 'Administrator'" % "admin", shell=True, ignore_status=True)
-        process.run("gpasswd wheel -a %s" % "admin", shell=True, ignore_status=True)
-        process.run("/bin/cp /etc/pam.d/cockpit{,.old}", shell=True, ignore_status=True)
-        process.run("echo foobar | passwd --stdin %s" % "admin", shell=True)
+        process.run("useradd %s -c 'Barney Bär'" % username, shell = True)
+        process.run("echo abcdefg | passwd --stdin %s" % username, shell = True)
+        process.run("useradd %s -c 'Administrator'" % "admin", shell = True)
+        process.run("gpasswd wheel -a %s" % "admin", shell = True)
+        process.run("/bin/cp /etc/pam.d/cockpit{,.old}", shell = True)
+        process.run("echo foobar | passwd --stdin %s" % "admin", shell = True)
 
 
         # Setup a special PAM config that disallows non-wheel users
-        process.run("echo '%s' > /etc/pam.d/cockpit" % admins_only_pam, shell=True)
+        process.run("echo '%s' > /etc/pam.d/cockpit" % admins_only_pam, shell = True)
 
-        process.run("systemctl start cockpit", shell=True ,ignore_status=True)
+        process.run("systemctl restart cockpit", shell = True)
 
 
     def action(self):
@@ -137,9 +136,9 @@ class checklogin(test.Test):
         self.Raw()
 
     def cleanup(self):
-        process.run("userdel -r %s" % username, shell=True, ignore_status=True)
-        process.run("systemctl stop cockpit", shell=True)
-        process.run("/bin/cp -f /etc/pam.d/cockpit{.old,}", shell=True, ignore_status=True)
+        process.run("userdel -r %s" % username, shell = True)
+        process.run("systemctl stop cockpit")
+        process.run("/bin/cp -f /etc/pam.d/cockpit{.old,}", shell = True)
         self.log.debug("END")
 
 if __name__ == "__main__":
