@@ -98,8 +98,7 @@ AVOCADO_TEST_DIR=$SCRIPT_DIR
 
 FAILED=
 run --xunit out1.xml $AVOCADO_TEST_DIR/{inittest.sh,compiletest.sh}
-run --xunit out2.xml --vm-clean $AVOCADO_TEST_DIR/checklogin.py
-run --xunit out3.xml --vm-clean $AVOCADO_TEST_DIR/checkrealms.py
+run --xunit out2.xml --vm-clean $AVOCADO_TEST_DIR/{checklogin.py,checkrealms.py}
 
 if [ -n $FAILED ]; then
     echo $FAILED
