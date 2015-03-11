@@ -82,9 +82,11 @@ fi
 vm_delete_snaps $GUEST1
 
 # Install cockpit sources to $GUEST1
-#
-( cd $(git rev-parse --show-toplevel) && git archive HEAD --prefix cockpit/ ) \
+# /root/avocado/tests/opt/cockpit/test-avocado/checklogin.py
+( cd $SCRIPT_DIR/.. && git archive HEAD --prefix cockpit/ ) \
   | vm_ssh $GUEST1 "rm -rf /root/cockpit && tar xfm - --directory /root/"
+# avocado workaound
+vm_ssh $GUEST1 "mkdir -p /root/avocado/tests/$SCRIPT_DIR; cp -rL /root/cockpit/$BASE /root/avocado/tests/$SCRIPT_DIR/"
 
 AVOCADO_PARAMS="--vm-domain $GUEST1 --vm-username root --vm-password $PASSWD --vm-hostname $IP"
 
