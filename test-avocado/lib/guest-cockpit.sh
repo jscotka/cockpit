@@ -2,7 +2,7 @@
 
 BASE_PCKGS="avocado avocado-plugins-output-html"
 if rpm -q $BASE_PCKGS >& /dev/null; then
-    echolog "All packages alread installed"
+    echo "All packages alread installed"
 else
     if cat /etc/redhat-release | grep "Red Hat"; then
         curl https://copr.fedoraproject.org/coprs/lmr/Autotest/repo/epel-7/lmr-Autotest-epel-7.repo > /etc/yum.repos.d/lmr-Autotest-epel-7.repo
@@ -13,7 +13,7 @@ else
         yum -y copr enable lmr/Autotest
         yum -y install $BASE_PCKGS
     else
-        echolog "Now are supported only Fedora and Red Hat installation methods"
+        echo "Now are supported only Fedora and Red Hat installation methods"
         exit 10
     fi
 fi
