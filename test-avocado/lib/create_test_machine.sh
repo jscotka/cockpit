@@ -82,7 +82,7 @@ function vm_wait_online(){
     local CTM_IP=`vm_get_ip $CTM_NAME`
     for foo in `seq $MAXIMUM_TIMEOUT`;do
         echo quit | telnet "$CTM_IP" 22 2>/dev/null | grep -q Connected && return 0
-        echo -n . > /dev/stderr
+        echo -n . 1>&2
         sleep 1
     done
     return 1
