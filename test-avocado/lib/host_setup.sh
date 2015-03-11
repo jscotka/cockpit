@@ -25,10 +25,10 @@
 # add line
 # <domain name='cockpit.lan' localOnly='yes'/>
 unset command_not_found_handle
-HS_BASE_PCKGS="virt-deploy pystache sshpass telnet fabric python-pip avocado virt-manager qemu-img"
+HS_BASE_PCKGS="virt-deploy pystache sshpass telnet fabric python-pip avocado avocado-plugins-output-html virt-manager qemu-img"
 export HS_GRP="virtualization"
 HS_CON="-c qemu:///system"
-export HS_POOLNAME="cockpitx"
+export HS_POOLNAME="cockpit-avocado"
 export HS_POOLNAME_PATH=/home/$HS_POOLNAME
 
 function echolog(){
@@ -63,13 +63,13 @@ function definepools(){
 EOF
     sudo virsh $HS_CON pool-start $HS_PNAME
     sudo virsh $HS_CON pool-autostart $HS_PNAME
-
+    HS_BRIDGENAME="`echo $HS_PNAME | sed -r 's/(.......).*/\1/'`_`echo $HS_PNAME | md5sum | sed -r 's/(..).*/\1/'`"
     sudo virsh $HS_CON net-define /dev/stdin <<EOF
 <network>
   <name>$HS_PNAME</name>
   <domain name='cockpit.lan' localOnly='yes'/>
   <forward mode='nat'/>
-  <bridge name='$HS_PNAME' stp='on' delay='0'/>
+  <bridge name='$HS_BRIDGENAME' stp='on' delay='0'/>
   <mac address='52:54:00:AB:AB:AB'/>
     <dns>
    </dns>
