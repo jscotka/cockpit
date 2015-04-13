@@ -121,9 +121,10 @@ AVOCADO_PARAMS="--vm-domain $GUEST1 --vm-username root --vm-password $GUEST1_PAS
 if [ -z "$AVOCADO_TESTS" ]; then
     AVOCADO_TESTS="compiletest.sh checklogin-basic.py checklogin-raw.py checkrealms-basic.py"
 else
-    COMPILE_TEST=compiletest.sh
+    COMPILE=compiletest
+    COMPILE_TEST=$COMPILE.sh
     # Make sure that we update and compile source, for that we need the compiletest
-    if [ "${AVOCADO_TESTS/$COMPILE_TEST}" = "$AVOCADO_TESTS" ] ; then
+    if echo "$AVOCADO_TESTS" | grep -v "$COMPILE" ; then
     	echo "Adding required test $COMPILE_TEST"
     	AVOCADO_TESTS="$COMPILE_TEST $AVOCADO_TESTS";
     fi
