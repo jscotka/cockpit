@@ -1,7 +1,6 @@
 #!/bin/bash
 set +x
 
-
 yum -y install mock || dnf -y install mock
 USER=mocktest
 useradd $USER
