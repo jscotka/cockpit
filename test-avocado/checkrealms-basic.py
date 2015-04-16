@@ -33,11 +33,16 @@ class checkrealms_basic(cockpit.Test):
                           "domain %s\nsearch %s\nnameserver %s\n"
                           % (domain, domain, domainip))
 
+        # Wait for DNS to work as expected.
+        # https://bugzilla.redhat.com/show_bug.cgi?id=1071356#c11
+        #
         wait(lambda: process.run("nslookup -type=SRV _ldap._tcp.%s" % domain))
 
         default_user = "admin"
         b = self.browser
-        b.login_and_go("server", user=default_user, href="/system/host")
+        # TODO: Make this work with non-root
+        b.login_and_go("server", user="admin", href="/system/host")
+        return
 
         def wait_number_domains(n):
             if n == 0:
