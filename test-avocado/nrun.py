@@ -566,7 +566,7 @@ def test_func(local_guest_name):
     if 'foobar' in output:
         echo_error("revert failed", always_show = True)
 
-def guest_flavor(local_guest_name,flavor_script_path,varfile=""):
+def guest_favour(local_guest_name,flavor_script_path,varfile=""):
     dom=refresh_guest(local_guest_name)
     flavorname=os.path.basename(flavor_script_path)
     ip = get_ip(dom)
