@@ -18,7 +18,7 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with Cockpit; If not, see <http://www.gnu.org/licenses/>.
 
-from avocado import job
+from avocado import main
 import cockpit
 
 username="user"
@@ -102,4 +102,4 @@ class checklogin_basic(cockpit.Test):
                                      "pam_succeed_if\(cockpit:auth\): requirement .* not met by user .*")
 
 if __name__ == "__main__":
-    job.main()
+    main()
