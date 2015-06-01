@@ -619,5 +619,10 @@ def avocado_run(local_guest_name,test_name,multiplex_file=None):
         print inst
         echo_warning("TEST FAILED: %s" % basenameoftest)
         pass
-    else:
-    download(ip,'/root/avocado', './')
+    try:
+        download(ip,'/root/avocado', './')
+    except Exception as inst:
+        print inst
+        echo_error("UNABLE TO DOWNLOAD results  to ./avocado dir")
+        
+
