@@ -50,7 +50,7 @@ class checklogin_basic(cockpit.Test):
     Test login for cockpit
     """
 
-    def test(self):
+    def phase(self):
         b = self.browser
 
         # Setup users and passwords

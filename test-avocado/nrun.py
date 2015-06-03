@@ -589,8 +589,8 @@ def guest_favour(local_guest_name,flavor_script_path,varfile=""):
         raise
 
     upload(ip, flavor_script_path, '/var/tmp/%s' % flavorname)
-    guest_run_command(dom, 'chmod a+x /var/tmp/%s' % flavorname, True)
-    guest_run_command(dom, '/var/tmp/%s "%s"' % (flavorname, varfile), True)
+    guest_run_command(dom, 'chmod a+x /var/tmp/%s' % flavorname, errors=False)
+    guest_run_command(dom, '/var/tmp/%s "%s"' % (flavorname, varfile), errors=False)
 
 avocado="avocado run "
 
@@ -611,9 +611,9 @@ def avocado_run(local_guest_name,test_name,multiplex_file=None):
 #    guest_run_command(dom, 'chmod a+x /var/tmp/avocado/*')
     try:
         if multiplex_file:
-            guest_run_command(dom, '%s -multiplex %s /var/tmp/avocado/%s/%s' % (avocado, multiplex_file, dirscp_path, basenameoftest), errors=True)
+            guest_run_command(dom, '%s -multiplex %s /var/tmp/avocado/%s/%s' % (avocado, multiplex_file, dirscp_path, basenameoftest), errors=False)
         else:
-            guest_run_command(dom, '%s /var/tmp/avocado/%s/%s' % (avocado, dirscp_path, basenameoftest), errors=True)
+            guest_run_command(dom, '%s /var/tmp/avocado/%s/%s' % (avocado, dirscp_path, basenameoftest), errors=False)
         echo_success("TEST PASSED: %s" % basenameoftest)
     except Exception as inst:
         print inst
