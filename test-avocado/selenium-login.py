@@ -15,13 +15,14 @@ usermod -a -G wheel test
 docker run -d -p 4444:4444 --name selenium-hub selenium/hub:2.48.2
 docker run -d --link selenium-hub:hub selenium/node-chrome:2.48.2
 docker run -d --link selenium-hub:hub selenium/node-firefox:2.48.2
+## java -jar selenium-server-standalone-2.20.0.jar -role node -hub http://$IPHUB:4444/grid/register  -port 5560 -browser  browserName="internet explorer",maxInstance=4,platform=WINDOWS  -Dwebdriver.ie.driver=c:\selenium\IEDriver.exe
 
 systemctl start cockpit
 
 # RUN AS
 avocado run selenium-login.py
 # OR ALTERNATIVELY with docker selenium server (BROWSER=firefox or chrome)
-HUB=localhost BROWSER=chrome GUEST=`hostname -i` avocado run selenium-login.py 
+HUB=localhost BROWSER=chrome GUEST=`hostname -i` avocado run selenium-login.py
 
 
 """
@@ -47,23 +48,23 @@ class BasicTestSuite(Test):
         super(BasicTestSuite, self).__init__(*args, **kwargs)
 
     def setUp(self):
-        if not (os.environ.has_key("HUB") or os.environ.has_key("BROWSER")):
+        if not ("HUB" in os.environ or "BROWSER" in os.environ):
             self.driver = selenium.webdriver.Firefox()
             guest_machine = 'localhost'
         else:
-            selenium_hub = os.environ["HUB"] if os.environ.has_key(
-                "HUB") else "localhost"
-            browser = os.environ["BROWSER"] if os.environ.has_key(
-                "BROWSER") else "firefox"
+            selenium_hub = os.environ[
+                "HUB"] if "HUB" in os.environ else "localhost"
+            browser = os.environ[
+                "BROWSER"] if "BROWSER" in os.environ else "firefox"
             guest_machine = os.environ["GUEST"]
             self.driver = selenium.webdriver.Remote(
                 command_executor='http://%s:4444/wd/hub' % selenium_hub, desired_capabilities={'browserName': browser})
         #
 
         self.driver.set_window_size(1024, 768)
-        self.driver.set_page_load_timeout(30)
-        self.driver.implicitly_wait(10)
-        self.default_try = 10
+        self.driver.set_page_load_timeout(10)
+        self.driver.implicitly_wait(5)
+        self.default_try = 20
         self.default_sleep = 1
         self.driver.get('https://%s:9090' % guest_machine)
 
@@ -208,15 +209,15 @@ class BasicTestSuite(Test):
         self.wait_id('containers-storage')
         self.wait_id('containers-images-search').click()
         elem = self.wait_xpath(
-            "//*[@id='containers-search-image-dialog' and @style='display: block;']")
+            "//*[@id='containers-search-image-dialog' and @class='modal-in']")
         baseelem = elem
-        elem = self.wait_id('containers-search-image-search', baseelem)
+        elem = self.wait_id('containers-search-image-search',baseelem)
         elem.clear()
         elem.send_keys("fedora")
         elem = self.wait_xpath(
-            "//*[@id='containers-search-image-results' and @style='display: block;']", baseelem)
+            "//*[@id='containers-search-image-results' and @style='display: block;']")
         elem = self.wait_xpath(
-            "//*[contains(text(), '%s')]" % "Official Fedora", baseelem)
+            "//*[contains(text(), '%s')]" % "Official Fedora")
         elem = self.wait_xpath(
             "//div[@id='containers-search-image-dialog']//button[contains(text(), '%s')]" % "Cancel")
         elem.click()
