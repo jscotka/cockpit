@@ -19,17 +19,14 @@
 
 import os, re, subprocess, shutil, imp
 
-from avocado import Test
 from avocado.utils import process
 from testlib import Browser
 
-__all__ = [ 'Test' ]
 
-class Test(Test):
-    def __init__(self, **args):
-        test.Test.__init__(self, **args)
+class Cockpit():
+    def __init__(self,):
         self.cleanup_funcs = [ ]
-        self.environment = self.params
+        self.setUp()
 
     def atcleanup(self, func):
         self.cleanup_funcs.append(func)
@@ -47,8 +44,8 @@ class Test(Test):
         with open(file, 'w') as f: f.write(content)
 
     def setUp(self):
-        state = self.get_state()
-        self.label = re.sub('.py$', '', os.path.basename(state['name']))
+#        state = self.get_state()
+        self.label = ("avocado")
         self.browser = Browser("localhost", self.label)
         self.journal_start = re.sub('.*cursor: ', '',
                                     subprocess.check_output("journalctl --show-cursor -n0 -o cat || true", shell=True))
@@ -60,7 +57,8 @@ class Test(Test):
         #self.check_journal_messages()
 
     def tearDown(self):
-        state = self.get_state()
+        pass
+#        state = self.get_state()
 
         # Make a final screenshot and save the journal for the test run.
         #

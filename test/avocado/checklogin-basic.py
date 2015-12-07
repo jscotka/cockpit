@@ -19,6 +19,7 @@
 # along with Cockpit; If not, see <http://www.gnu.org/licenses/>.
 
 from avocado import main
+from avocado import Test
 import cockpit
 
 username="user"
@@ -45,21 +46,22 @@ session    include      password-auth
 session    include      postlogin
 """
 
-class checklogin_basic(cockpit.Test):
+class checklogin_basic(Test):
     """
     Test login for cockpit
     """
-
-    def phase(self):
-        b = self.browser
+    
+    def testLogin(self):
+        c = cockpit.Cockpit()
+        b = c.browser
 
         # Setup users and passwords
         setup_cmd = "useradd %s -c 'Barney Bär'; echo abcdefg | passwd --stdin %s" % (username, username)
         cleanup_cmd = "userdel -r %s" % username
-        self.run_shell_command(setup_cmd, cleanup_cmd)
+        c.run_shell_command(setup_cmd, cleanup_cmd)
 
         # Setup a special PAM config that disallows non-wheel users
-        self.replace_file("/etc/pam.d/cockpit", admins_only_pam)
+        c.replace_file("/etc/pam.d/cockpit", admins_only_pam)
 
         b.open("/system")
         b.wait_visible("#login")
@@ -96,7 +98,7 @@ class checklogin_basic(cockpit.Test):
         b.enter_page("account")
         b.wait_text ("#account-user-name", "admin")
 
-        self.allow_journal_messages ("Returning error-response ... with reason .*",
+        c.allow_journal_messages ("Returning error-response ... with reason .*",
                                      "pam_unix\(cockpit:auth\): authentication failure; .*",
                                      "pam_unix\(cockpit:auth\): check pass; user unknown",
                                      "pam_succeed_if\(cockpit:auth\): requirement .* not met by user .*")
