@@ -20,8 +20,11 @@
 
 from avocado import main
 from avocado import Test
-from avocado.utils import process
+import sys
+import os
+sys.path.append(os.path.abspath(os.path.dirname(__file__)))
 import cockpit
+
 
 class checkexample_foo(Test):
     """
