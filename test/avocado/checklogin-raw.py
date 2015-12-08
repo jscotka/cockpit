@@ -20,6 +20,7 @@
 
 import base64
 import time
+import subprocess
 
 from avocado import main
 from avocado import Test
@@ -51,6 +52,7 @@ class checklogin_raw(Test):
         return int(tokens[1])
 
     def testRaw(self):
+        c = cockpit.Cockpit()
         time.sleep(0.5)
         self.assertEqual(self.curl_auth_code('/cockpit/login', ''), 401)
         self.assertEqual(self.curl_auth_code('/cockpit/login', 'foo:'), 401)
@@ -73,7 +75,7 @@ class checklogin_raw(Test):
         self.assertEqual(self.curl_auth_code(
             '/cockpit/login', 'a' * 4000 + ':b\nc\n'), 401)
 
-        self.allow_journal_messages("Returning error-response ... with reason .*",
+        c.allow_journal_messages("Returning error-response ... with reason .*",
                                     "pam_unix\(cockpit:auth\): authentication failure; .*",
                                     "pam_unix\(cockpit:auth\): check pass; user unknown",
                                     "pam_succeed_if\(cockpit:auth\): requirement .* not met by user .*",

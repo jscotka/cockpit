@@ -57,9 +57,6 @@ class Cockpit():
         self.journal_start = re.sub('.*cursor: ', '',
                                     subprocess.check_output("journalctl --show-cursor -n0 -o cat || true", shell=True))
 
-    def test(self):
-        self.phase()
-
     def tearDown(self):
         pass
         # self.check_journal_messages()
