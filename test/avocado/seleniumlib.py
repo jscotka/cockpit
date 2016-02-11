@@ -45,6 +45,15 @@ clickable = EC.element_to_be_clickable
 invisible = EC.invisibility_of_element_located
 frame = EC.frame_to_be_available_and_switch_to_it
 
+# custom profiles for Browsers, it allows download file without dialog
+profiles={}
+profiles['firefox'] = selenium.webdriver.FirefoxProfile()
+profiles['firefox'].set_preference('browser.download.folderList', 2) # custom location 
+profiles['firefox'].set_preference('browser.download.manager.showWhenStarting', False)
+profiles['firefox'].set_preference('browser.download.dir', os.getcwd())
+profiles['firefox'].set_preference('browser.helperApps.neverAsk.saveToDisk', 'application/x-xz')
+profiles['chrome'] = None
+
 class SeleniumTest(Test):
     """
     :avocado: disable
@@ -58,7 +67,7 @@ class SeleniumTest(Test):
             browser = os.environ["BROWSER"] if os.environ.has_key("BROWSER") else "firefox"
             guest_machine = os.environ["GUEST"]
             self.driver = selenium.webdriver.Remote(
-                command_executor='http://%s:4444/wd/hub' % selenium_hub, desired_capabilities={'browserName': browser})
+                command_executor='http://%s:4444/wd/hub' % selenium_hub, desired_capabilities={'browserName': browser}, browser_profile=profiles[browser])
 
         self.driver.set_window_size(1400, 1200)
         self.driver.set_page_load_timeout(90)
