@@ -52,9 +52,7 @@ profiles['firefox'].set_preference('browser.download.folderList', 2) # custom lo
 profiles['firefox'].set_preference('browser.download.manager.showWhenStarting', False)
 profiles['firefox'].set_preference('browser.download.dir', os.getcwd())
 profiles['firefox'].set_preference('browser.helperApps.neverAsk.saveToDisk', 'application/x-xz')
-profiles['chrome'] = selenium.webdriver.ChromeOptions()
-profiles['chrome'].AddUserProfilePreference("download.default_directory", os.getcwd());
-profiles['chrome'].AddUserProfilePreference("disable-popup-blocking", "true");
+profiles['chrome'] = None
 
 class SeleniumTest(Test):
     """
