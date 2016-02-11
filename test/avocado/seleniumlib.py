@@ -46,13 +46,15 @@ invisible = EC.invisibility_of_element_located
 frame = EC.frame_to_be_available_and_switch_to_it
 
 # custom profiles for Browsers, it allows download file without dialog
-profiles={}
+profiles = {}
 profiles['firefox'] = selenium.webdriver.FirefoxProfile()
 profiles['firefox'].set_preference('browser.download.folderList', 2) # custom location 
 profiles['firefox'].set_preference('browser.download.manager.showWhenStarting', False)
 profiles['firefox'].set_preference('browser.download.dir', os.getcwd())
 profiles['firefox'].set_preference('browser.helperApps.neverAsk.saveToDisk', 'application/x-xz')
-profiles['chrome'] = None
+profiles['chrome'] = selenium.webdriver.ChromeOptions()
+profiles['chrome'].AddUserProfilePreference("download.default_directory", os.getcwd());
+profiles['chrome'].AddUserProfilePreference("disable-popup-blocking", "true");
 
 class SeleniumTest(Test):
     """
@@ -60,7 +62,7 @@ class SeleniumTest(Test):
     """
     def setUp(self):
         if not (os.environ.has_key("HUB") or os.environ.has_key("BROWSER")):
-            self.driver = selenium.webdriver.Firefox()
+            self.driver = selenium.webdriver.Firefox(profiles['firefox'])
             guest_machine = 'localhost'
         else:
             selenium_hub = os.environ["HUB"] if os.environ.has_key("HUB") else "localhost"
