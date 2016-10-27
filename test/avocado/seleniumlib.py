@@ -59,7 +59,7 @@ class SeleniumTest(Test):
             def connectfirefox():
                 self.driver = selenium.webdriver.Firefox()
             connectfirefox()
-            guest_machine = 'localhost'
+            guest_machine = os.environ["GUEST"] if os.environ.has_key("GUEST") else "localhost"
         else:
             selenium_hub = os.environ["HUB"] if os.environ.has_key("HUB") else "localhost"
             browser = os.environ["BROWSER"] if os.environ.has_key("BROWSER") else "firefox"
