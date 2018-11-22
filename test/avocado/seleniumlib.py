@@ -148,6 +148,47 @@ This function is only for internal purposes:
         else:
             return True
 
+    def js_execute(self, command, ignore_status=False, output=False):
+        #https://cockpit-project.org/guide/172/cockpit-spawn.html
+        script = """
+var proc = cockpit.spawn(%s);
+var isFinished = False
+var retCode = 0
+var outputData = ""
+proc.done(proc_success);
+proc.stream(proc_output);
+proc.fail(prco_fail);
+proc.always(proc_finished);
+
+function proc_finished() {
+    isFinished = True
+}
+
+function proc_success() {
+    retCode = 0;
+}
+
+function proc_fail(exception) {
+    retCode = exception.exit_status;
+}
+
+function proc_output(data) {
+    outputData = data;
+}
+
+function waitForResults(){
+    if (isFinished) {
+        return outputData
+    } else {
+        setTimeout(function(){waitForResults()},100);
+    };
+}
+waitForResults()
+return outputData;
+        """ % str(command)
+        return self.driver.execute_script(script)
+
+
     def click(self, element):
         failure = "CLICK: too many tries"
         usedfunction = self.element_wait_functions[element] if element in self.element_wait_functions else None
