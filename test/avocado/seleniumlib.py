@@ -155,10 +155,7 @@ var callback = arguments[arguments.length - 1];
 cockpit.spawn(["/bin/bash", "-c", "%s"]).then(output => callback(output)).catch(err => callback(err)); 
         """ % command
         output = self.driver.execute_async_script(script)
-        #output = self.driver.execute_script("return await callback()")
         print(output)
-
-
         return output
 
 
