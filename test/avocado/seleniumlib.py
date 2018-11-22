@@ -151,42 +151,15 @@ This function is only for internal purposes:
     def js_execute(self, command, ignore_status=False, output=False):
         #https://cockpit-project.org/guide/172/cockpit-spawn.html
         script = """
-var proc = cockpit.spawn(%s);
-var isFinished = False
-var retCode = 0
-var outputData = ""
-proc.done(proc_success);
-proc.stream(proc_output);
-proc.fail(prco_fail);
-proc.always(proc_finished);
+var callback = arguments[arguments.length - 1];
+cockpit.spawn(["/bin/bash", "-c", "%s"]).then(output => callback(output)).catch(err => callback(err)); 
+        """ % command
+        output = self.driver.execute_async_script(script)
+        #output = self.driver.execute_script("return await callback()")
+        print(output)
 
-function proc_finished() {
-    isFinished = True
-}
 
-function proc_success() {
-    retCode = 0;
-}
-
-function proc_fail(exception) {
-    retCode = exception.exit_status;
-}
-
-function proc_output(data) {
-    outputData = data;
-}
-
-function waitForResults(){
-    if (isFinished) {
-        return outputData
-    } else {
-        setTimeout(function(){waitForResults()},100);
-    };
-}
-waitForResults()
-return outputData;
-        """ % str(command)
-        return self.driver.execute_script(script)
+        return output
 
 
     def click(self, element):
