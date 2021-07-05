@@ -1,8 +1,6 @@
 #!/bin/sh
 set -eux
 
-cd "$SOURCE"
-
 . /etc/os-release
 test_optional=
 test_basic=

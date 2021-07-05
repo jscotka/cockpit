@@ -29,5 +29,13 @@ require:
   - libvirt-daemon-kvm
   - libvirt-client
 
-test: ./run-verify-host.sh
+prepare:
+  - name: Install chromium
+    script: ./prepare-chromium.sh
+  - name: Create users for tests
+    script: ./prepare-users.sh
+  - name: Set up cockpit
+    script: ./prepare-cockpit.sh
+
+test: ./run.sh
 duration: 4h
