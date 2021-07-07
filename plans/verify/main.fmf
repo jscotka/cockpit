@@ -1,0 +1,14 @@
+summary:
+    Run verify tests
+prepare:
+  - name: Install chromium
+    script: ./prepare-chromium.sh
+  - name: Create users for tests
+    script: ./prepare-users.sh
+  - name: Set up cockpit
+    script: ./prepare-cockpit.sh
+discover:
+    how: fmf
+    filter: tag:verify
+execute:
+    how: tmt
